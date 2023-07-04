@@ -1,0 +1,132 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Create Ticket</title>
+    <style>
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Ticket</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_subject">Subject:</label>
+            {{ form.subject }}
+        </div>
+        <div class="form-group">
+            <label for="id_body">Body:</label>
+            {{ form.body }}
+        </div>
+        <div class="form-group">
+            <label for="id_priority">Priority:</label>
+            {{ form.priority }}
+        </div>
+        <div class="form-group">
+            <label for="id_ticket_email">Ticket Email:</label>
+            <input
+            type="text"
+            class="w-full p-2 border border-grey-300 rounded-md placeholder:font-light placeholder:text-grey-500 active:border-sky-400"
+            name="ticket_email"
+            id="id_ticket_email"
+            id="email_or_phone_number"
+            value="{{ request.user.email }}"
+            disabled
+        >
+        </div>
+        <div class="form-group">
+            <label for="id_ticket_phone_number">Ticket Phone Number:</label>
+            <input
+            
+            type="text"
+            name="ticket_phone_number"
+            id="id_ticket_phone_number"
+            value="{{ request.user.phone_number }}"
+            class="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+        >
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html> -->
+<!-- <form method="post">
+    {% csrf_token %}
+    
+    <div>
+        <label for="{{ form.subject.id_for_label }}">Subject:</label>
+        {{ form.subject }}
+    </div>
+    
+    <div>
+        <label for="{{ form.body.id_for_label }}">Body:</label>
+        {{ form.body }}
+    </div>
+    
+    <div>
+        <label for="{{ form.priority.id_for_label }}">Priority:</label>
+        {{ form.priority }}
+    </div>
+    
+    <div>
+        <label for="{{ form.ticket_email.id_for_label }}">Ticket Email:</label>
+        <input type="email" name="ticket_email" class="form-control" required id="id_ticket_email" value="{{ request.user.email }}">
+    </div>
+    
+    <div>
+        <label for="{{ form.ticket_phone_number.id_for_label }}">Ticket Phone Number:</label>
+        <input type="text" name="ticket_phone_number" class="form-control" required id="id_ticket_phone_number" value="{{ request.user.phone_number }}">
+    </div>
+    
+    <button type="submit">Submit</button>
+</form> -->
+<!-- <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create ticket">
+</form> -->
+<!-- create_ticket.html -->
+<form method="post" action="{% url 'Accounts:create_ticket' %}">
+    {% csrf_token %}
+    <label for="subject">Subject:</label>
+    <input type="text" name="subject" required>
+    <br>
+    <label for="body">Body:</label>
+    <textarea name="body" required></textarea>
+    <br>
+    <label for="priority">Priority:</label>
+    <select name="priority">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+    <br>
+    <label for="ticket_email">Email:</label>
+    <input type="email" name="ticket_email" required value="{{request.user.email}}">
+    <br>
+    <label for="ticket_phone_number">Phone Number:</label>
+    <input type="tel" name="ticket_phone_number" required value="{{request.user.phone_number}}">
+    <br>
+    <input type="submit" value="Submit">
+</form>
