@@ -15,8 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import include, path
+from django.contrib.auth.views import LoginView
+# from django.urls import handler404
+from django.views.defaults import page_not_found
+
+
+handler404 = 'AcmeSupport.urls.page_not_found_view'
+# handler404 = page_not_found_view
+handler404 = page_not_found
+
 
 urlpatterns = [
+    # re_path(r'^.*$', page_not_found, name='404')
     path('admin/', admin.site.urls),
-     path('',include('Accounts.urls')),
+    path('',include('Accounts.urls')),
+    path('', LoginView.as_view(template_name='login.html'), name='login')
 ]
+
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
