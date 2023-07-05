@@ -246,6 +246,55 @@ PRIORITY_MAPPING = {
 
 
 @csrf_exempt
+# def create_ticket(request):
+#     if request.method == 'POST':
+#         # Extract the data from the request
+#         subject = request.POST.get('subject')
+#         body = request.POST.get('body')
+#         priority = request.POST.get('priority')
+#         ticket_email = request.POST.get('ticket_email')
+#         ticket_phone_number = request.POST.get('ticket_phone_number')
+
+#         # Map priority value to numeric value
+#         priority_mapping = {
+#             'low': 1,
+#             'medium': 2,
+#             'high': 3,
+#         }
+#         # Default to 1 if priority is not found
+#         priority = priority_mapping.get(priority, 1)
+
+#         # Create the ticket in Freshdesk
+#         url = 'https://acme8306.freshdesk.com/api/v2/tickets'
+#         headers = {'Content-Type': 'application/json'}
+#         auth = ('1DTPsoWBTnqpLENEEWf', 'X')
+#         data = {
+#             'description': body,
+#             'subject': subject,
+#             'email': ticket_email,
+#             'priority': priority,  # Use the mapped numeric value
+#             'status': 2,
+#         }
+#         response = requests.post(url, headers=headers, auth=auth, json=data)
+#         if response.status_code == 201:
+#             # Ticket created successfully in Freshdesk, save it in the Django database
+#             user = CustomUser.objects.get(email=ticket_email)
+#             freshdesk_ticket_id = response.json().get(
+#                 'id')  # Retrieve the CustomUser instance
+#             ticket = Ticket.objects.create(
+#                 subject=subject,
+#                 body=body,
+#                 priority=str(priority),  # Save the priority as a string
+#                 ticket_email=user,  # Assign the CustomUser instance to ticket_email field
+#                 ticket_phone_number=ticket_phone_number,
+#                 freshdesk_ticket_id=freshdesk_ticket_id
+#             )
+#             return JsonResponse({'success': True, 'ticket_id': ticket.id})
+#         else:
+#             return JsonResponse({'success': False, 'error_message': response.json()})
+
+#     # GET request, render the form
+#     return render(request, 'create-ticket.html')
 def create_ticket(request):
     if request.method == 'POST':
         # Extract the data from the request
@@ -271,25 +320,29 @@ def create_ticket(request):
         data = {
             'description': body,
             'subject': subject,
-            'email': ticket_email,
-            'priority': priority,  # Use the mapped numeric value
+            'priority': priority,
             'status': 2,
         }
+        
+        # Check if email is provided and add it to the data
+        if ticket_email:
+            data['email'] = ticket_email
+
         response = requests.post(url, headers=headers, auth=auth, json=data)
         if response.status_code == 201:
             # Ticket created successfully in Freshdesk, save it in the Django database
             user = CustomUser.objects.get(email=ticket_email)
-            freshdesk_ticket_id = response.json().get(
-                'id')  # Retrieve the CustomUser instance
+            freshdesk_ticket_id = response.json().get('id')
             ticket = Ticket.objects.create(
                 subject=subject,
                 body=body,
-                priority=str(priority),  # Save the priority as a string
-                ticket_email=user,  # Assign the CustomUser instance to ticket_email field
+                priority=str(priority),
+                ticket_email=user,
                 ticket_phone_number=ticket_phone_number,
                 freshdesk_ticket_id=freshdesk_ticket_id
             )
-            return JsonResponse({'success': True, 'ticket_id': ticket.id})
+            return redirect('Accounts:home')
+            # return JsonResponse({'success': True, 'ticket_id': ticket.id})
         else:
             return JsonResponse({'success': False, 'error_message': response.json()})
 
